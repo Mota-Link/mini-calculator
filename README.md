@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="src/icon.png">
+<img src="src/icon.png" width=120px>
 
 # Mini Calculator 迷你计算器
 
