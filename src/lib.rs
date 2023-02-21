@@ -15,17 +15,6 @@ pub struct Calculator {
     ops_buf: char,
 }
 
-impl Default for Calculator {
-    fn default() -> Self {
-        Self {
-            display: "0".to_owned(),
-            history: "".to_owned(),
-            num_buf: [NAN, NAN],
-            ops_buf: '\0',
-        }
-    }
-}
-
 #[derive(Debug, Clone, Copy)]
 pub enum Message {
     Num(NumMessage),
@@ -62,7 +51,12 @@ impl Sandbox for Calculator {
 
     // Required methods
     fn new() -> Self {
-        Default::default()
+        Self {
+            display: "0".to_owned(),
+            history: "".to_owned(),
+            num_buf: [NAN, NAN],
+            ops_buf: '\0',
+        }
     }
 
     fn title(&self) -> String {
