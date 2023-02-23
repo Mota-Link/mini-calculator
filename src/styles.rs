@@ -4,8 +4,8 @@ use iced::widget::{button, container, text, Button};
 use iced::{color, theme, Background, Color, Length, Theme};
 use lazy_static::lazy_static;
 
-pub const BUTTON_DIAMETER: u16 = 66;
-pub const BUTTON_SPACE: u16 = 5;
+pub(super) const BUTTON_DIAMETER: u16 = 66;
+pub(super) const BUTTON_SPACE: u16 = 5;
 
 struct ColorStyles {
     background: Color,
