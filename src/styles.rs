@@ -72,9 +72,9 @@ lazy_static! {
     ];
 }
 
-pub static mut STYLE_IDX: usize = 0;
+pub(super) static mut STYLE_IDX: usize = 0;
 
-pub fn create_button(
+pub(super) fn create_button(
     content: &str,
     msg: Message,
     style: impl button::StyleSheet<Style = Theme> + 'static,
@@ -93,7 +93,7 @@ pub fn create_button(
         .on_press(msg)
 }
 
-pub struct NumStyle;
+pub(super) struct NumStyle;
 impl button::StyleSheet for NumStyle {
     type Style = Theme;
     fn active(&self, _style: &Self::Style) -> button::Appearance {
@@ -125,7 +125,7 @@ impl button::StyleSheet for NumStyle {
     }
 }
 
-pub struct OpsStyle;
+pub(super) struct OpsStyle;
 impl button::StyleSheet for OpsStyle {
     type Style = Theme;
     fn active(&self, _style: &Self::Style) -> button::Appearance {
@@ -156,7 +156,7 @@ impl button::StyleSheet for OpsStyle {
     }
 }
 
-pub struct EtrStyle;
+pub(super) struct EtrStyle;
 impl button::StyleSheet for EtrStyle {
     type Style = Theme;
     fn active(&self, _style: &Self::Style) -> button::Appearance {
@@ -187,7 +187,7 @@ impl button::StyleSheet for EtrStyle {
     }
 }
 
-pub fn screen_container_style(_: &Theme) -> container::Appearance {
+pub(super) fn screen_container_style(_: &Theme) -> container::Appearance {
     container::Appearance {
         text_color: Some(COLORS[unsafe { STYLE_IDX }].screen_text),
         background: Some(Background::Color(
@@ -198,7 +198,7 @@ pub fn screen_container_style(_: &Theme) -> container::Appearance {
     }
 }
 
-pub fn calculator_background_style(_: &Theme) -> container::Appearance {
+pub(super) fn calculator_background_style(_: &Theme) -> container::Appearance {
     container::Appearance {
         background: Some(Background::Color(COLORS[unsafe { STYLE_IDX }].background)),
         ..Default::default()

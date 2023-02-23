@@ -23,7 +23,7 @@ pub enum Message {
     CE,
     C,
     DEL,
-    STYLE,
+    Style,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -52,7 +52,6 @@ pub enum OpsMessage {
 impl Sandbox for Calculator {
     type Message = Message;
 
-    // Required methods
     fn new() -> Self {
         Self {
             display: "0".to_owned(),
@@ -209,14 +208,14 @@ impl Sandbox for Calculator {
                 [a, _] if a.is_nan() => *self = Self::new(),
                 [_, _] => unreachable!(),
             },
-            Message::STYLE => unsafe { STYLE_IDX = (STYLE_IDX + 1) % 3 },
+            Message::Style => unsafe { STYLE_IDX = (STYLE_IDX + 1) % 3 },
         };
     }
 
     fn view(&self) -> Element<'_, Self::Message> {
         let keyboard = row![
             column![
-                create_button("STY", Message::STYLE, EtrStyle),
+                create_button("STY", Message::Style, EtrStyle),
                 create_button("+", Message::Ops(Add), OpsStyle),
                 create_button("-", Message::Ops(Sub), OpsStyle),
                 create_button("*", Message::Ops(Mul), OpsStyle),
