@@ -13,7 +13,7 @@ fn main() -> iced::Result {
     Calculator::run(Settings {
         window: WindowSettings {
             resizable: false,
-            size: (300, 430),
+            size: (300, 500),
             icon: Some(Icon::from_file_data(my_icon, Some(ImageFormat::Png)).unwrap()),
             ..WindowSettings::default()
         },

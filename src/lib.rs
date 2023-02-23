@@ -20,6 +20,10 @@ pub enum Message {
     Num(NumMessage),
     Ops(OpsMessage),
     Enter,
+    CE,
+    C,
+    DEL,
+    STYLE,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -34,7 +38,6 @@ pub enum NumMessage {
     Seven,
     Eight,
     Nine,
-
     Dot,
 }
 
@@ -65,8 +68,8 @@ impl Sandbox for Calculator {
 
     fn update(&mut self, message: Self::Message) {
         let format = |input: f64| -> String {
-            if input.to_string().len() > 10 {
-                format!("{:.4e}", input)
+            if input.to_string().len() >= 10 {
+                format!("{:.3e}", input)
             } else {
                 input.to_string()
             }
@@ -189,11 +192,31 @@ impl Sandbox for Calculator {
                 }
                 [_, _] => unreachable!(),
             },
+            Message::DEL => match self.num_buf {
+                // [a, b] if a.is_nan() && b.is_nan() => todo!(),
+                [_, b] if b.is_nan() => {
+                    self.display.pop();
+                    if self.display.len() == 0 {
+                        self.display = "0".to_owned();
+                    }
+                }
+                [a, _] if a.is_nan() => self.history = "".to_owned(),
+                [_, _] => unreachable!(),
+            },
+            Message::C => *self = Self::new(),
+            Message::CE => match self.num_buf {
+                [_, b] if b.is_nan() => self.display = "0".to_owned(),
+                [a, _] if a.is_nan() => *self = Self::new(),
+                [_, _] => unreachable!(),
+            },
+            Message::STYLE => unsafe { STYLE_IDX = (STYLE_IDX + 1) % 3 },
         };
     }
+
     fn view(&self) -> Element<'_, Self::Message> {
         let keyboard = row![
             column![
+                create_button("STY", Message::STYLE, EtrStyle),
                 create_button("+", Message::Ops(Add), OpsStyle),
                 create_button("-", Message::Ops(Sub), OpsStyle),
                 create_button("*", Message::Ops(Mul), OpsStyle),
@@ -201,6 +224,7 @@ impl Sandbox for Calculator {
             ]
             .spacing(BUTTON_SPACE),
             column![
+                create_button("CE", Message::CE, EtrStyle),
                 create_button("7", Message::Num(Seven), NumStyle),
                 create_button("4", Message::Num(Four), NumStyle),
                 create_button("1", Message::Num(One), NumStyle),
@@ -209,6 +233,7 @@ impl Sandbox for Calculator {
             .spacing(BUTTON_SPACE)
             .align_items(Alignment::Center),
             column![
+                create_button("C", Message::C, EtrStyle),
                 create_button("8", Message::Num(Eight), NumStyle),
                 create_button("5", Message::Num(Five), NumStyle),
                 create_button("2", Message::Num(Two), NumStyle),
@@ -216,10 +241,11 @@ impl Sandbox for Calculator {
             ]
             .spacing(BUTTON_SPACE),
             column![
+                create_button("DEL", Message::DEL, EtrStyle),
                 create_button("9", Message::Num(Nine), NumStyle),
                 create_button("6", Message::Num(Six), NumStyle),
                 create_button("3", Message::Num(Three), NumStyle),
-                create_button("=", Message::Enter, OpsStyle),
+                create_button("=", Message::Enter, EtrStyle),
             ]
             .spacing(BUTTON_SPACE),
         ]
